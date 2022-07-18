@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { App } from 'components/App';
+import App from 'components/App';
 import GlobalStyles from 'components/GlobalStyles';
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 

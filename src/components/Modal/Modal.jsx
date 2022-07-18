@@ -1,41 +1,42 @@
-import { Component } from 'react';
+import { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { ModalBox, Overlay } from './Modal.styled';
+import { BsXSquare } from 'react-icons/bs';
+import { ModalBox, Overlay, CloseButton } from './Modal.styled';
 
-class Modal extends Component {
-  static propTypes = {
-    onClose: PropTypes.func.isRequired,
-    imageURL: PropTypes.string.isRequired,
-  };
+const Modal = ({ onClose, imageURL }) => {
+  useEffect(() => {
+    const onEscapePress = e => {
+      if (e.code === 'Escape') {
+        onClose();
+      }
+    };
+    document.addEventListener('keydown', onEscapePress);
 
-  componentDidMount() {
-    document.addEventListener('keydown', this.onEscapePress);
-  }
+    return () => {
+      document.removeEventListener('keydown', onEscapePress);
+    };
+  }, [onClose]);
 
-  componentWillUnmount() {
-    document.removeEventListener('keydown', this.onEscapePress);
-  }
-
-  onEscapePress = e => {
-    if (e.code === 'Escape') {
-      this.props.onClose();
-    }
-  };
-
-  onBackdropClick = e => {
+  const onBackdropClick = e => {
     if (e.target === e.currentTarget) {
-      this.props.onClose();
+      onClose();
     }
   };
 
-  render() {
-    return (
-      <Overlay onClick={this.onBackdropClick}>
-        <ModalBox>
-          <img src={this.props.imageURL} alt="Full version" />
-        </ModalBox>
-      </Overlay>
-    );
-  }
-}
+  return (
+    <Overlay onClick={onBackdropClick}>
+      <ModalBox>
+        <CloseButton type="button" onClick={onClose} aria-label="Close">
+          <BsXSquare />
+        </CloseButton>
+        <img src={imageURL} alt="Full version" />
+      </ModalBox>
+    </Overlay>
+  );
+};
 export default Modal;
+
+Modal.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  imageURL: PropTypes.string.isRequired,
+};
